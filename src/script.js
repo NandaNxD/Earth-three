@@ -15,7 +15,8 @@ import gsap from "gsap";
 // Debug
 const gui = new GUI()
 
-gui.close()
+gui.close();
+gui.hide();
 
 // Text Element
 const domTextContent=document.getElementById('non-gl-content-container');
@@ -69,12 +70,13 @@ textureLoader.manager.onLoad=()=>{
     
     setTimeout(()=>{
         domTextContent.classList.remove('hide');
+        gui.show();
     },500)
     
 }
 
 textureLoader.manager.onProgress=(url, loaded, total)=>{
-    loaderEl.style.transform=`scaleX(${(loaded/total)*100})`;
+    loaderEl.style.transform=`scaleX(${(loaded/total)})`;
 }
 
 /**
