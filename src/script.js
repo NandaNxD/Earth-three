@@ -5,7 +5,9 @@ import earthVertexShader from './shaders/earth/vertex.glsl'
 import earthFragmentShader from './shaders/earth/fragment.glsl'
 import atmosphereVertexShader from './shaders/atmosphere/vertex.glsl'
 import atmosphereFragmentShader from './shaders/atmosphere/fragment.glsl'
-import { update } from 'three/examples/jsm/libs/tween.module.js'
+import loaderVertexShader from './shaders/loader/vertex.glsl'
+import loaderFragmentShader from './shaders/loader/fragment.glsl'
+import gsap from "gsap";
 
 /**
  * Base
@@ -15,11 +17,35 @@ const gui = new GUI()
 
 gui.close()
 
+// Text Element
+const domTextContent=document.getElementById('non-gl-content-container');
+
+console.log(domTextContent)
+
+// Loader Dom Element
+const loaderEl=document.querySelector('.loader');
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+
+// Overlay
+const overlayGeometry=new THREE.PlaneGeometry(2,2,1,1);
+const overlayMaterial=new THREE.ShaderMaterial({
+    transparent:true,
+    vertexShader:loaderVertexShader,
+    fragmentShader:loaderFragmentShader,
+    uniforms:{
+        uAlpha:new THREE.Uniform(1)
+    }
+});
+const overlayMesh=new THREE.Mesh(overlayGeometry,overlayMaterial);
+
+scene.add(overlayMesh);
+
 
 // Loaders
 const textureLoader = new THREE.TextureLoader()
@@ -36,11 +62,19 @@ const earthSpecularCloudsTexture=textureLoader.load('./earth/specularClouds.jpg'
 earthSpecularCloudsTexture.anisotropy=8;
 
 textureLoader.manager.onLoad=()=>{
-    console.log("loaded")
+
+    gsap.to(overlayMaterial.uniforms.uAlpha,{value:0,duration:1})
+   
+    loaderEl.classList.add('hide');
+    
+    setTimeout(()=>{
+        domTextContent.classList.remove('hide');
+    },500)
+    
 }
 
 textureLoader.manager.onProgress=(url, loaded, total)=>{
-    console.log(loaded/total);
+    loaderEl.style.transform=`scaleX(${(loaded/total)*100})`;
 }
 
 /**
