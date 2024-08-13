@@ -68,11 +68,8 @@ textureLoader.manager.onLoad=()=>{
    
     loaderEl.classList.add('hide');
     
-    setTimeout(()=>{
-        domTextContent.classList.remove('hide');
-        gui.show();
-    },500)
-    
+    domTextContent.classList.remove('hide');
+    gui.show();
 }
 
 textureLoader.manager.onProgress=(url, loaded, total)=>{
