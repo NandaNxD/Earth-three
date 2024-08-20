@@ -45,6 +45,10 @@ a{
     color: #3391ff;
 }
 
+li{
+    list-style: none;
+}
+
 .heading-section{
     margin-bottom: 1rem;
 }
